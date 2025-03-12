@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from duckdb import DuckDBPyRelation
 from pandas import DataFrame
 
+load_dotenv()
+
 
 # Download files from Google Drive
 def google_drive_file(url_folder, folder_local):
@@ -35,23 +37,39 @@ def read_csv_duckdb(path_file):
     return df_duckdb 
 
 
+# Function to convert DuckDB to Pandas and save the DataFrame in PostgreSQL.
+
+def save_postgre(df_duckdb,table):
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    engine = create_engine(DATABASE_URL)
+
+    # Save the DataFrame Postegre
+    df_duckdb.to_sql(table, con=engine, if_exixts='append', index=False)
+
+
 def etl(df: DuckDBPyRelation) -> DataFrame:
 
     # Execute a SQL query that includes a new column, operating on a virtual table.
     df_etl = duckdb.sql("SELECT *, quantidade * valor AS total_vendas FROM df").df()
 
     #Remove the record from the virtual table for cleanup.
-    print(df_etl)
     return df_etl
 
 
 
 if __name__ == "__main__":
+    
     url_folder = 'https://drive.google.com/drive/folders/1T100DU3JJ6zzHrjgSdvnNY7VIOfEzVuh'
     folder_local = './folder_gdown'
     #google_drive_file(url_folder,folder_local)
-    files = list_files_csv(folder_local)   
-    data_frame_duckdb = read_csv_duckdb(files)
-    etl(data_frame_duckdb)
+    files_list = list_files_csv(folder_local)  
+
+    for  path_file in files_list:
+         duckdb_df_etl = read_csv_duckdb(path_file)
+         pnadas_df_etl = etl(duckdb_df_etl)
+         save_postgre(pnadas_df_etl, "vendas_calculado") 
+
+    #data_frame_duckdb = read_csv_duckdb(files_list)
+    #etl(data_frame_duckdb)
     
     
