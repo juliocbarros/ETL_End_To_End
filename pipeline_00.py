@@ -54,3 +54,4 @@ if __name__ == "__main__":
     data_frame_duckdb = read_csv_duckdb(files)
     etl(data_frame_duckdb)
     
+    
