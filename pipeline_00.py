@@ -44,7 +44,7 @@ def save_postgre(df_duckdb,table):
     engine = create_engine(DATABASE_URL)
 
     # Save the DataFrame Postegre
-    df_duckdb.to_sql(table, con=engine, if_exixts='append', index=False)
+    df_duckdb.to_sql(table, con=engine, if_exists='append', index=False)
 
 
 def etl(df: DuckDBPyRelation) -> DataFrame:
