@@ -74,10 +74,3 @@ This project uses a PostgreSQL database hosted on Render.com, providing:
 - The PostgreSQL database credentials should be kept secure using environment variables
 - The pipeline can handle multiple CSV files in a single execution
 
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
