@@ -1,162 +1,195 @@
 # ETL Pipeline with DuckDB, PostgreSQL, and Streamlit Dashboard
 
-This project implements a complete data solution with an ETL (Extract, Transform, Load) pipeline that processes CSV files from Google Drive, loads them into a PostgreSQL database hosted on Render.com, and displays the results through a Streamlit dashboard.
+![Pipeline Architecture](pipeline00.png)
 
-## Overview
+This project implements an end-to-end data solution featuring an ETL (Extract, Transform, Load) pipeline that processes CSV files from Google Drive, stores them in a PostgreSQL database hosted on Render.com, and presents the data through an interactive Streamlit dashboard.
 
-The system consists of three main components:
-1. ETL Pipeline: Processes sales data from CSV files
-2. Cloud Database: PostgreSQL hosted on Render.com
-3. Web Interface: Interactive dashboard built with Streamlit
+## Architecture Overview
 
-The pipeline performs the following steps:
+The system is built on three core components:
+1. **ETL Pipeline**: Automated data processing system
+2. **Cloud Database**: PostgreSQL instance on Render.com
+3. **Web Dashboard**: Interactive Streamlit interface
+
+Pipeline workflow:
 1. Downloads CSV files from Google Drive
-2. Processes them using DuckDB for efficient data manipulation
-3. Transforms the data by calculating sales totals
-4. Loads the results into PostgreSQL
-5. Displays processed data through Streamlit dashboard
+2. Processes data using DuckDB for optimal performance
+3. Applies business transformations
+4. Loads processed data into PostgreSQL
+5. Visualizes results via Streamlit
 
-## Technologies Used
+## Technology Stack
 
-- Python 3.x
-- DuckDB - For efficient CSV processing
-- PostgreSQL - Cloud database (Render.com)
-- Streamlit - Web interface and dashboard
-- pandas - Data manipulation
-- SQLAlchemy - Database connectivity
-- gdown - Google Drive integration
+- **Python 3.x**: Core programming language
+- **DuckDB**: High-performance CSV processing
+- **PostgreSQL**: Cloud database (Render.com hosted)
+- **Streamlit**: Web interface and visualization
+- **pandas**: Data manipulation library
+- **SQLAlchemy**: Database ORM
+- **gdown**: Google Drive file handling
 
 ## Project Structure
 
-### Main Components
+### Core Components
 
-1. `pipeline_00.py` - ETL pipeline implementation
-2. `app.py` - Streamlit dashboard
-3. `.env` - Environment configuration
+```
+project/
+├── pipeline_00.py     # ETL pipeline implementation
+├── app.py            # Streamlit dashboard
+├── .env             # Configuration variables
+└── requirements.txt  # Project dependencies
+```
 
-### Pipeline Functions Explained
+### Pipeline Functions Detailed
 
-`pipeline_00.py` contains the following key functions:
+The `pipeline_00.py` implements these key functions:
 
+#### 1. Google Drive Integration
 ```python
 def google_drive_file(url_folder, folder_local):
     """
     Downloads files from Google Drive folder
-    - url_folder: Google Drive folder URL
-    - folder_local: Local destination folder
+    Parameters:
+        url_folder (str): Google Drive folder URL
+        folder_local (str): Local destination path
     """
+```
 
+#### 2. File Management
+```python
 def list_files_csv(folder_local):
     """
     Lists all CSV files in specified folder
-    - folder_local: Path to search for CSV files
-    Returns: List of CSV file paths
+    Parameters:
+        folder_local (str): Directory to scan
+    Returns:
+        list: Paths of found CSV files
     """
+```
 
+#### 3. Data Processing
+```python
 def read_csv_duckdb(path_file):
     """
-    Reads CSV into DuckDB relation
-    - path_file: Path to CSV file
-    Returns: DuckDB relation
+    Loads CSV into DuckDB relation
+    Parameters:
+        path_file (str): CSV file path
+    Returns:
+        DuckDB relation: Loaded data
     """
+```
 
+#### 4. Database Operations
+```python
 def save_postgre(df_duckdb, table):
     """
-    Saves data to PostgreSQL
-    - df_duckdb: DuckDB dataframe
-    - table: Target table name
+    Persists data to PostgreSQL
+    Parameters:
+        df_duckdb: DuckDB dataframe
+        table (str): Target table name
     """
+```
 
+#### 5. Data Transformation
+```python
 def etl(df):
     """
-    Performs transformation logic
-    - Calculates total sales (quantidade * valor)
-    - Applies business rules
-    Returns: Transformed dataframe
+    Executes transformation logic
+    - Computes total sales
+    - Implements business rules
+    Returns:
+        DataFrame: Processed data
     """
 ```
 
-## Setup Instructions
+## Setup Guide
 
-### 1. Database Setup on Render.com
-1. Create account on Render.com
-2. Create new PostgreSQL database
-3. Note down connection credentials
-4. Set up environment variables
+### 1. PostgreSQL Setup on Render.com
+1. Register on Render.com
+2. Create new PostgreSQL instance
+3. Save connection details
+4. Configure environment variables
 
-### 2. Local Installation
+### 2. Development Environment
 ```bash
-pip install pandas duckdb gdown sqlalchemy python-dotenv streamlit
+pip install -r requirements.txt
 ```
 
-### 3. Environment Configuration
+### 3. Environment Setup
 Create `.env` file:
 ```
-DATABASE_URL=postgresql://user:password@render.com:5432/database_name
+DATABASE_URL=postgresql://user:password@render.com:5432/db_name
 GOOGLE_DRIVE_FOLDER=your_folder_url
 ```
 
-## Running the Application
+## Running the System
 
-### 1. ETL Pipeline
+1. Execute ETL Pipeline:
 ```bash
 python pipeline_00.py
 ```
 
-### 2. Streamlit Dashboard
+2. Launch Dashboard:
 ```bash
 streamlit run app.py
 ```
 
-## Streamlit Dashboard Features
+## Dashboard Features
 
-The dashboard (`app.py`) provides:
-- Real-time sales data visualization
-- Interactive filters and charts
-- Sales performance metrics
-- Data export capabilities
+The Streamlit interface provides:
+- Dynamic data visualization
+- Custom filtering options
+- Key performance indicators
+- Data export functionality
 
 ## Cloud Infrastructure
 
-### PostgreSQL on Render.com
-- Automated backups
-- Scalable storage
-- Secure SSL connections
-- Built-in monitoring
+### Render.com PostgreSQL Benefits
+- Automated maintenance
+- Built-in backups
+- SSL security
+- Performance monitoring
+- Scalable resources
 
-### Benefits
-- Zero maintenance
-- Automatic updates
-- High availability
-- Cost-effective scaling
+## Security Implementation
 
-## Security Considerations
+- Environment-based credentials
+- Encrypted connections
+- Role-based access control
+- Regular security patches
 
-- Database credentials stored in environment variables
-- Secure HTTPS connections
-- Access control through Render.com
-- Regular security updates
+## Monitoring & Maintenance
 
-## Monitoring and Maintenance
+- Database performance metrics
+- Usage analytics
+- Error tracking
+- Backup management
 
-- Render.com dashboard for database monitoring
-- Streamlit analytics for usage tracking
-- Automated error logging
-- Regular backup verification
+## Best Practices
 
-## Notes
+- Configure appropriate Drive permissions
+- Monitor database usage
+- Update dependencies regularly
+- Implement automated testing
+- Maintain backup strategy
 
-- Ensure Google Drive folder permissions are set correctly
-- Monitor database usage on Render.com
-- Keep dependencies updated
-- Regular testing of ETL pipeline
-- Backup important data regularly
+## Roadmap
 
-## Future Enhancements
+- Enhanced analytics features
+- Automated testing suite
+- Performance optimizations
+- Advanced data analysis
+- REST API implementation
 
-- Additional dashboard features
-- Automated testing
-- Performance optimization
-- Extended data analytics
-- API integration capabilities
+## Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Create Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
