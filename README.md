@@ -1,76 +1,162 @@
-# ETL Pipeline with DuckDB and PostgreSQL
+# ETL Pipeline with DuckDB, PostgreSQL, and Streamlit Dashboard
 
-This project implements an ETL (Extract, Transform, Load) pipeline that processes CSV files from Google Drive and loads them into a PostgreSQL database hosted on Render.com.
+This project implements a complete data solution with an ETL (Extract, Transform, Load) pipeline that processes CSV files from Google Drive, loads them into a PostgreSQL database hosted on Render.com, and displays the results through a Streamlit dashboard.
 
 ## Overview
+
+The system consists of three main components:
+1. ETL Pipeline: Processes sales data from CSV files
+2. Cloud Database: PostgreSQL hosted on Render.com
+3. Web Interface: Interactive dashboard built with Streamlit
 
 The pipeline performs the following steps:
 1. Downloads CSV files from Google Drive
 2. Processes them using DuckDB for efficient data manipulation
 3. Transforms the data by calculating sales totals
-4. Loads the results into a PostgreSQL database
+4. Loads the results into PostgreSQL
+5. Displays processed data through Streamlit dashboard
 
 ## Technologies Used
 
 - Python 3.x
-- DuckDB - For efficient CSV processing and data transformation
-- PostgreSQL - As the target database (hosted on Render.com)
-- pandas - For data manipulation
-- SQLAlchemy - For database connectivity
-- gdown - For downloading files from Google Drive
+- DuckDB - For efficient CSV processing
+- PostgreSQL - Cloud database (Render.com)
+- Streamlit - Web interface and dashboard
+- pandas - Data manipulation
+- SQLAlchemy - Database connectivity
+- gdown - Google Drive integration
 
 ## Project Structure
 
-The main script `pipeline_00.py` contains several key functions:
+### Main Components
 
-### Key Functions
+1. `pipeline_00.py` - ETL pipeline implementation
+2. `app.py` - Streamlit dashboard
+3. `.env` - Environment configuration
 
-- `google_drive_file(url_folder, folder_local)`: Downloads files from a Google Drive folder
-- `list_files_csv(folder_local)`: Lists all CSV files in the specified local folder
-- `read_csv_duckdb(path_file)`: Reads CSV files into DuckDB relations
-- `save_postgre(df_duckdb, table)`: Saves transformed data to PostgreSQL
-- `etl(df)`: Performs the transformation logic, calculating total sales
+### Pipeline Functions Explained
 
-### Database Configuration
+`pipeline_00.py` contains the following key functions:
 
-The project uses environment variables for database configuration. The PostgreSQL connection is established through Render.com's cloud hosting service.
+```python
+def google_drive_file(url_folder, folder_local):
+    """
+    Downloads files from Google Drive folder
+    - url_folder: Google Drive folder URL
+    - folder_local: Local destination folder
+    """
 
-## Setup and Installation
+def list_files_csv(folder_local):
+    """
+    Lists all CSV files in specified folder
+    - folder_local: Path to search for CSV files
+    Returns: List of CSV file paths
+    """
 
-1. Clone the repository
-2. Install required dependencies:
-```bash
-pip install pandas duckdb gdown sqlalchemy python-dotenv
+def read_csv_duckdb(path_file):
+    """
+    Reads CSV into DuckDB relation
+    - path_file: Path to CSV file
+    Returns: DuckDB relation
+    """
+
+def save_postgre(df_duckdb, table):
+    """
+    Saves data to PostgreSQL
+    - df_duckdb: DuckDB dataframe
+    - table: Target table name
+    """
+
+def etl(df):
+    """
+    Performs transformation logic
+    - Calculates total sales (quantidade * valor)
+    - Applies business rules
+    Returns: Transformed dataframe
+    """
 ```
 
-3. Create a `.env` file with your PostgreSQL connection string:
+## Setup Instructions
+
+### 1. Database Setup on Render.com
+1. Create account on Render.com
+2. Create new PostgreSQL database
+3. Note down connection credentials
+4. Set up environment variables
+
+### 2. Local Installation
+```bash
+pip install pandas duckdb gdown sqlalchemy python-dotenv streamlit
+```
+
+### 3. Environment Configuration
+Create `.env` file:
 ```
 DATABASE_URL=postgresql://user:password@render.com:5432/database_name
+GOOGLE_DRIVE_FOLDER=your_folder_url
 ```
 
-## Usage
+## Running the Application
 
-1. Set your Google Drive folder URL containing the CSV files
-2. Run the pipeline:
+### 1. ETL Pipeline
 ```bash
 python pipeline_00.py
 ```
 
-## Data Transformation
+### 2. Streamlit Dashboard
+```bash
+streamlit run app.py
+```
 
-The ETL process includes a calculation of total sales by multiplying quantity (`quantidade`) by value (`valor`) for each record. The transformed data is stored in the `vendas_calculado` table in PostgreSQL.
+## Streamlit Dashboard Features
 
-## Cloud Database
+The dashboard (`app.py`) provides:
+- Real-time sales data visualization
+- Interactive filters and charts
+- Sales performance metrics
+- Data export capabilities
 
-This project uses a PostgreSQL database hosted on Render.com, providing:
-- Scalable cloud storage
-- Reliable database access
-- Secure connection through environment variables
-- Easy integration with other cloud services
+## Cloud Infrastructure
+
+### PostgreSQL on Render.com
+- Automated backups
+- Scalable storage
+- Secure SSL connections
+- Built-in monitoring
+
+### Benefits
+- Zero maintenance
+- Automatic updates
+- High availability
+- Cost-effective scaling
+
+## Security Considerations
+
+- Database credentials stored in environment variables
+- Secure HTTPS connections
+- Access control through Render.com
+- Regular security updates
+
+## Monitoring and Maintenance
+
+- Render.com dashboard for database monitoring
+- Streamlit analytics for usage tracking
+- Automated error logging
+- Regular backup verification
 
 ## Notes
 
-- Make sure you have proper access rights to the Google Drive folder
-- The PostgreSQL database credentials should be kept secure using environment variables
-- The pipeline can handle multiple CSV files in a single execution
+- Ensure Google Drive folder permissions are set correctly
+- Monitor database usage on Render.com
+- Keep dependencies updated
+- Regular testing of ETL pipeline
+- Backup important data regularly
+
+## Future Enhancements
+
+- Additional dashboard features
+- Automated testing
+- Performance optimization
+- Extended data analytics
+- API integration capabilities
 
